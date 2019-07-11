@@ -17,7 +17,8 @@ closure_css_library(
 
 closure_js_template_library(
   name = "sample-tpl",
-  srcs = ["sample.soy"]
+  srcs = ["sample.soy"],
+  incremental_dom = True
 )
 
 closure_css_binary(

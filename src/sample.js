@@ -2,7 +2,7 @@
 goog.module('sample');
 
 const soy = goog.require('goog.soy');
-const tpl = goog.require('sample.tpl');
+const tpl = goog.require('sample.tpl.idom');
 
 
 const el = soy.renderAsElement(
