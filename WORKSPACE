@@ -36,8 +36,9 @@ local_repository(
 # Load j2cl repository
 http_archive(
     name = "com_google_j2cl",
-    strip_prefix = "j2cl-77adb6c226d334850946eaaa2d37eeac6c5e99a5",
-    url = "https://github.com/bloombox/j2cl/archive/77adb6c226d334850946eaaa2d37eeac6c5e99a5.zip",
+    strip_prefix = "j2cl-56857ec2322ee557652fdba1b75f8d00178f6739",
+    url = "https://github.com/bloombox/j2cl/archive/56857ec2322ee557652fdba1b75f8d00178f6739.zip",
+    sha256 = "b0f9ce6a06486eaf1593354abac972f6f95e06a93da72a8dd37158ea285cc787",
 )
 
 load("@com_google_j2cl//build_defs:rules.bzl", "setup_j2cl_workspace")

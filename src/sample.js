@@ -1,14 +1,39 @@
 
 goog.module('sample');
 
-const soy = goog.require('goog.soy');
-const tpl = goog.require('sample.tpl.idom');
+const idom = goog.require('incrementaldom');
+const idomApi = goog.require('google3.javascript.template.soy.api_idom');
+const tpl = goog.require('sample.tpl.incrementaldom');
 
 
-const el = soy.renderAsElement(
-  tpl.sample,
-  {},
-  {});
+/**
+ * @const
+ * @type {!idomApi.IncrementalDomRenderer}
+ */
+const renderer_ = new idomApi.IncrementalDomRenderer();
 
-document.body.appendChild(el);
-console.log('Sample done.');
+
+/**
+ * @public
+ */
+function render() {
+  const docFrag = document.createDocumentFragment();
+  idom.patch(docFrag, () => {
+    tpl.sample(renderer_);
+  });
+  document.body.appendChild(docFrag);
+}
+
+/**
+ * @public
+ */
+function run() {
+  console.log('Beginning sample...');
+  render();
+  console.log('Sample done.');
+}
+
+
+setTimeout(function() {
+    run();
+}, 1000);

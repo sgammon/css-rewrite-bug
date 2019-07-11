@@ -4,7 +4,8 @@ load("@io_bazel_rules_closure//closure:defs.bzl",
      "closure_js_library",
      "closure_js_template_library",
      "closure_js_binary",
-     "closure_css_binary")
+     "closure_css_binary",
+     "web_library")
 
 load("@com_google_j2cl//build_defs:rules.bzl",
      "j2cl_application")
@@ -15,30 +16,46 @@ closure_css_library(
   srcs = ["sample.css"],
 )
 
+closure_js_library(
+  name = "xid-js",
+  srcs = ["xid.js"],
+)
+
 closure_js_template_library(
   name = "sample-tpl",
   srcs = ["sample.soy"],
-  incremental_dom = True
+  deps = [":xid-js"],
+  incremental_dom = True,
 )
 
 closure_css_binary(
   name = "sample-styles",
   deps = [":sample-css"],
+  renaming = True,
 )
 
 closure_js_library(
   name = "sample-js",
   srcs = ["sample.js"],
   deps = [
+    ":xid-js",
     ":sample-tpl",
     ":sample-css",
+    "@com_google_javascript_incremental_dom//:idom-js",
+    "@io_bazel_rules_closure//closure/templates:soy_jssrc_idom",
     "@io_bazel_rules_closure//closure/library/soy:soy",
   ]
 )
 
+web_library(
+  name = "sample-html",
+  srcs = ["sample.html"],
+  path = "/"
+)
+
 closure_js_binary(
     name = "sample-bin",
-    debug = False,
+    debug = True,
     entry_points = ["sample"],
     deps = [":sample-js"],
     css = ":sample-styles",
@@ -68,7 +85,15 @@ closure_js_binary(
 
 j2cl_application(
     name = "sample-app",
+    debug = False,
+    # formatting = "PRETTY_PRINT",
     entry_points = ["sample"],
     deps = [":sample-js"],
-    css = ":sample-styles"
+    css = ":sample-styles",
+    language = "ECMASCRIPT_2017",
+    extra_dev_resources = [
+      "sample.html",
+      "sample-styles.css",
+      "sample-app.js"
+    ]
 )
