@@ -3,6 +3,7 @@ load("@io_bazel_rules_closure//closure:defs.bzl",
      "closure_css_library",
      "closure_js_library",
      "closure_js_template_library",
+     "closure_template_library",
      "closure_js_binary",
      "closure_css_binary",
      "web_library")
@@ -21,10 +22,34 @@ closure_js_library(
   srcs = ["xid.js"],
 )
 
+closure_template_library(
+  name = "dep-tpl",
+  srcs = ["dep.soy"],
+)
+
 closure_js_template_library(
+  name = "dep-js-tpl",
+  srcs = ["dep.soy"],
+  js_deps = [":xid-js"],
+  incremental_dom = True,
+)
+
+closure_template_library(
   name = "sample-tpl",
   srcs = ["sample.soy"],
-  deps = [":xid-js"],
+  deps = [":dep-tpl"],
+)
+
+closure_js_template_library(
+  name = "sample-js-tpl",
+  srcs = ["sample.soy"],
+  deps = [
+    ":dep-tpl"
+  ],
+  js_deps = [
+    ":xid-js",
+    ":dep-js-tpl",
+  ],
   incremental_dom = True,
 )
 
@@ -39,7 +64,7 @@ closure_js_library(
   srcs = ["sample.js"],
   deps = [
     ":xid-js",
-    ":sample-tpl",
+    ":sample-js-tpl",
     ":sample-css",
     "@com_google_javascript_incremental_dom//:idom-js",
     "@io_bazel_rules_closure//closure/templates:soy_jssrc_idom",

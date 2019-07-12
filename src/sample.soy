@@ -1,7 +1,9 @@
+
 {namespace sample.tpl}
 
 {template .sample}
   <div class="{css('hello')}">
-    <b>hi</b>
+    {call sample.dep.sample2}
+    {/call}
   </div>
 {/template}
